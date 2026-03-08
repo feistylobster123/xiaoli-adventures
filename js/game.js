@@ -768,6 +768,14 @@
       return;
     }
 
+    // Apply screen shake
+    if (game.shakeTimer > 0) {
+      const shakeX = (Math.random() - 0.5) * game.shakeIntensity * (game.shakeTimer / 20);
+      const shakeY = (Math.random() - 0.5) * game.shakeIntensity * (game.shakeTimer / 20);
+      ctx.save();
+      ctx.translate(shakeX, shakeY);
+    }
+
     // Sky
     if (game.scene === 'indoor') {
       // Indoor background
@@ -957,6 +965,11 @@
         ctx.fillText('Back Inside...', GAME_W / 2, GAME_H / 2);
       }
       ctx.globalAlpha = 1;
+    }
+
+    // End screen shake transform
+    if (game.shakeTimer > 0) {
+      ctx.restore();
     }
   }
 
