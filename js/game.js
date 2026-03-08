@@ -18,7 +18,25 @@
   function resizeCanvas() {
     canvas.width = GAME_W;
     canvas.height = GAME_H;
-    // CSS handles the scaling
+
+    // Fit canvas to viewport while preserving 3:2 aspect ratio
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const aspectRatio = GAME_W / GAME_H;
+
+    let cssW, cssH;
+    if (vw / vh > aspectRatio) {
+      // Viewport is wider than canvas -- fit to height
+      cssH = vh;
+      cssW = vh * aspectRatio;
+    } else {
+      // Viewport is taller than canvas -- fit to width
+      cssW = vw;
+      cssH = vw / aspectRatio;
+    }
+
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
   }
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
@@ -286,7 +304,7 @@
     popup.style.top = (y * scaleY + rect.top) + 'px';
 
     document.getElementById('game-wrapper').appendChild(popup);
-    setTimeout(() => popup.remove(), 800);
+    setTimeout(() => popup.remove(), 1800);
   }
 
   // ---- Scene Transitions ----
