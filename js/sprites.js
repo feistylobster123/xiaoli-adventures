@@ -3,6 +3,20 @@
 // All sprites drawn procedurally on canvas
 // ============================================
 
+// Polyfill roundRect for older browsers (pre-Chrome 99, pre-Safari 17)
+if (typeof CanvasRenderingContext2D !== 'undefined' &&
+    !CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, radii) {
+    const r = typeof radii === 'number' ? radii : (Array.isArray(radii) ? radii[0] : 0);
+    this.moveTo(x + r, y);
+    this.arcTo(x + w, y, x + w, y + h, r);
+    this.arcTo(x + w, y + h, x, y + h, r);
+    this.arcTo(x, y + h, x, y, r);
+    this.arcTo(x, y, x + w, y, r);
+    this.closePath();
+  };
+}
+
 const Sprites = {
   // Draw Xiaoli the cat (grey and white fluffy cat)
   drawXiaoli(ctx, x, y, w, h, frame, state) {
