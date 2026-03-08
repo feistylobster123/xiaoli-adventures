@@ -599,6 +599,7 @@
         p.y = game.groundY - p.h;
         p.vy = 0;
         p.grounded = true;
+        p.doubleJumped = false;
         p.animState = 'land';
         setTimeout(() => { if (p.grounded) p.animState = 'run'; }, 100);
 
@@ -665,6 +666,7 @@
           addPopup(ent.x, ent.y - 20, 'SCRATCH! -20hp', '');
           emitParticles(ent.x + ent.w/2, ent.y + ent.h/2, '#fbbf24', 8);
           game.effects.push({ type: 'scratch', x: ent.x + ent.w/2, y: ent.y + ent.h/2, frame: 0 });
+          triggerShake(8, 20);
 
           if (p.health <= 0) {
             p.health = 0;
@@ -743,6 +745,11 @@
         c.y = 20 + Math.random() * 60;
       }
     });
+
+    // Update screen shake
+    if (game.shakeTimer > 0) {
+      game.shakeTimer--;
+    }
 
     // Passive score
     if (game.frame % 60 === 0) {
