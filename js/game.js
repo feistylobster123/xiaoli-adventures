@@ -179,7 +179,13 @@
 
     const hiEl = document.getElementById('hi-score');
     if (hiEl) {
-      hiEl.textContent = game.highScore > 0 ? ('HI ' + game.highScore) : '';
+      if (game.score > 0 && game.score >= game.highScore) {
+        hiEl.textContent = 'NEW BEST!';
+        hiEl.style.color = '#fbbf24';
+      } else if (game.highScore > 0) {
+        hiEl.textContent = 'HI ' + game.highScore;
+        hiEl.style.color = '';
+      }
     }
 
     const healthBar = document.getElementById('health-bar');
@@ -348,9 +354,32 @@
     game.transitionAlpha = 0;
   }
 
+  // Random complaint texts for variety
+  const complaintTexts = [
+    'Xiaoli lodges a formal complaint about inadequate treat supplies.',
+    'Xiaoli demands to speak with the manager of this household.',
+    'Xiaoli files grievance #847: too many dogs, not enough boxes.',
+    'Captain Xiaoli reports unacceptable working conditions.',
+    'Xiaoli insists this was NOT her fault and wants it on record.',
+    'Xiaoli submits a strongly worded letter to the complaints department.',
+    'Xiaoli would like it noted that she tried her best.',
+    'Xiaoli reminds everyone she is a HOUSE cat, not a fighter.',
+  ];
+
   function triggerComplaint() {
     game.state = STATE.COMPLAINT;
     game.complaintShown = true;
+
+    // Update complaint text and score display
+    const isNewHigh = game.score > 0 && game.score >= game.highScore;
+    const textEl = document.getElementById('complaint-text');
+    if (textEl) {
+      textEl.textContent = complaintTexts[Math.floor(Math.random() * complaintTexts.length)];
+    }
+    const scoreEl = document.getElementById('complaint-score');
+    if (scoreEl) {
+      scoreEl.textContent = 'Score: ' + game.score + (isNewHigh ? '  NEW BEST!' : '');
+    }
 
     const overlay = document.getElementById('complaint-overlay');
     overlay.classList.remove('hidden');
