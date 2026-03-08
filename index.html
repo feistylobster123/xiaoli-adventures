@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Xiaoli Adventures</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='28' font-size='28'>🐱</text></svg>">
+</head>
+<body>
+  <div id="game-wrapper">
+    <canvas id="gameCanvas"></canvas>
+    <div id="ui-overlay">
+      <div id="score-display">
+        <span id="score">0</span>
+        <span id="score-label">pts</span>
+      </div>
+      <div id="health-bar-container">
+        <div id="health-bar"></div>
+        <div id="health-label">XIAOLI</div>
+      </div>
+    </div>
+    <div id="start-screen">
+      <div id="title-card">
+        <div id="title-cat"></div>
+        <h1>XIAOLI<br>ADVENTURES</h1>
+        <p class="subtitle">The Floofiest Platformer</p>
+        <button id="start-btn">TAP TO PLAY</button>
+        <p class="hint">Tap or Space to jump</p>
+      </div>
+    </div>
+    <div id="complaint-overlay" class="hidden">
+      <div id="complaint-content">
+        <div id="complaint-banner">COMPLAINT CAPTAIN</div>
+        <div id="complaint-scene"></div>
+        <p id="complaint-text">Xiaoli lodges a formal complaint...</p>
+        <button id="continue-btn">Continue Adventure</button>
+      </div>
+    </div>
+    <div id="outdoor-flash" class="hidden">
+      <div id="outdoor-text">OUTSIDE TIME!</div>
+    </div>
+  </div>
+  <script src="js/sprites.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
