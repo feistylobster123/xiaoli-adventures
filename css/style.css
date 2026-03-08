@@ -69,6 +69,14 @@ canvas {
   text-transform: uppercase;
 }
 
+#hi-score {
+  color: rgba(251,191,36,0.7);
+  font-size: 11px;
+  font-weight: 700;
+  margin-left: 6px;
+  letter-spacing: 1px;
+}
+
 #health-bar-container {
   width: 140px;
   height: 20px;
@@ -201,7 +209,16 @@ h1 {
   font-weight: 500;
   letter-spacing: 3px;
   text-transform: uppercase;
-  margin-bottom: 32px;
+  margin-bottom: 8px;
+}
+
+#title-highscore {
+  color: rgba(251,191,36,0.8);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+  min-height: 18px;
 }
 
 #start-btn {

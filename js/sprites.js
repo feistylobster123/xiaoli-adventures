@@ -552,11 +552,12 @@ const Sprites = {
     const sway = Math.sin(frame * 0.03 + x * 0.01) * 2;
 
     const grassColors = ['#22c55e', '#16a34a', '#4ade80'];
+    const heights = [18, 21, 15, 20, 17]; // fixed heights to avoid per-frame jitter
     for (let i = 0; i < 5; i++) {
       ctx.fillStyle = grassColors[i % 3];
       ctx.beginPath();
       ctx.moveTo(i * (w / 5), 0);
-      ctx.quadraticCurveTo(i * (w / 5) + sway, -15 - Math.random() * 8, i * (w / 5) + 3, 0);
+      ctx.quadraticCurveTo(i * (w / 5) + sway, -heights[i], i * (w / 5) + 3, 0);
       ctx.fill();
     }
 
@@ -787,6 +788,43 @@ const Sprites = {
     ctx.fillRect(4, h/2 + 2, w/2 - 6, h/2 - 6);
     ctx.fillRect(w/2 + 2, h/2 + 2, w/2 - 6, h/2 - 6);
 
+    ctx.restore();
+  },
+
+  // Draw grass bonus pickup (outdoor collectible)
+  drawGrassBonus(ctx, x, y, w, h, frame) {
+    ctx.save();
+    ctx.translate(x, y);
+
+    // Glowing patch of lush grass
+    const glow = Math.sin(frame * 0.08) * 0.15 + 0.85;
+    ctx.globalAlpha = glow;
+
+    // Base grass patch
+    ctx.fillStyle = '#4ade80';
+    ctx.beginPath();
+    ctx.ellipse(w * 0.5, h * 0.8, w * 0.45, h * 0.2, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Tall grass blades
+    const sway = Math.sin(frame * 0.05) * 3;
+    const bladeColors = ['#22c55e', '#4ade80', '#86efac', '#4ade80', '#22c55e'];
+    for (let i = 0; i < 5; i++) {
+      ctx.fillStyle = bladeColors[i];
+      ctx.beginPath();
+      ctx.moveTo(w * (0.15 + i * 0.17), h * 0.8);
+      ctx.quadraticCurveTo(w * (0.15 + i * 0.17) + sway, h * 0.1, w * (0.18 + i * 0.17), h * 0.8);
+      ctx.fill();
+    }
+
+    // Sparkle
+    ctx.fillStyle = '#fbbf24';
+    ctx.globalAlpha = Math.sin(frame * 0.12) * 0.4 + 0.6;
+    ctx.font = `${w * 0.3}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.fillText('\u2728', w * 0.5, h * 0.3);
+
+    ctx.globalAlpha = 1;
     ctx.restore();
   },
 

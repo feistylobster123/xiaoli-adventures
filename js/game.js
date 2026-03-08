@@ -102,7 +102,10 @@
     complaintShown: false,
 
     // Score popups
-    popups: []
+    popups: [],
+
+    // High score
+    highScore: (function() { try { return parseInt(localStorage.getItem('xiaoli-highscore') || '0', 10); } catch(e) { return 0; } })()
   };
 
   // ---- Platforms ----
@@ -167,6 +170,17 @@
   // ---- UI Updates ----
   function updateUI() {
     document.getElementById('score').textContent = game.score;
+
+    // Update high score
+    if (game.score > game.highScore) {
+      game.highScore = game.score;
+      try { localStorage.setItem('xiaoli-highscore', String(game.highScore)); } catch(e) { /* private browsing */ }
+    }
+
+    const hiEl = document.getElementById('hi-score');
+    if (hiEl) {
+      hiEl.textContent = game.highScore > 0 ? ('HI ' + game.highScore) : '';
+    }
 
     const healthBar = document.getElementById('health-bar');
     const healthPct = (game.player.health / game.player.maxHealth) * 100;
@@ -239,7 +253,12 @@
         break;
 
       case 'grass_bonus':
-        // Just visual, points from jumping
+        game.entities.push({
+          type: 'grass_bonus',
+          x, y: game.groundY - 30,
+          w: 35, h: 30,
+          active: true
+        });
         break;
     }
   }
@@ -348,8 +367,12 @@
     const mctx = miniCanvas.getContext('2d');
     let cframe = 0;
 
+    let complaintAnimId = null;
     function drawComplaintScene() {
-      if (game.state !== STATE.COMPLAINT) return;
+      if (game.state !== STATE.COMPLAINT) {
+        if (complaintAnimId) cancelAnimationFrame(complaintAnimId);
+        return;
+      }
       mctx.clearRect(0, 0, 200, 200);
 
       // Floor
@@ -363,7 +386,7 @@
       Sprites.drawOwner(mctx, 120, 60, 60, 110, cframe);
 
       cframe++;
-      requestAnimationFrame(drawComplaintScene);
+      complaintAnimId = requestAnimationFrame(drawComplaintScene);
     }
     drawComplaintScene();
   }
@@ -448,6 +471,12 @@
     e.stopPropagation();
     resumeFromComplaint();
   });
+
+  // Show high score on title screen
+  const titleHi = document.getElementById('title-highscore');
+  if (titleHi && game.highScore > 0) {
+    titleHi.textContent = 'BEST: ' + game.highScore;
+  }
 
   function startGame() {
     const startScreen = document.getElementById('start-screen');
@@ -620,6 +649,16 @@
           addPopup(ent.x, ent.y - 20, '+15', 'birds');
           emitParticles(ent.x + ent.w/2, ent.y, '#93c5fd', 8);
           break;
+
+        case 'grass_bonus':
+          // Roll in the grass for health + points
+          ent.active = false;
+          p.health = Math.min(p.maxHealth, p.health + 10);
+          game.score += 8;
+          addPopup(ent.x, ent.y - 20, '+10hp +8', 'health');
+          emitParticles(ent.x + ent.w/2, ent.y, '#4ade80', 10);
+          emitParticles(ent.x + ent.w/2, ent.y, '#22c55e', 6);
+          break;
       }
     });
 
@@ -787,6 +826,9 @@
         case 'bird':
           Sprites.drawBird(ctx, ent.x, ent.y, ent.w, ent.h, game.frame);
           break;
+        case 'grass_bonus':
+          Sprites.drawGrassBonus(ctx, ent.x, ent.y, ent.w, ent.h, game.frame);
+          break;
       }
     });
 
@@ -886,6 +928,15 @@
     render();
     requestAnimationFrame(gameLoop);
   }
+
+  // Show high score on title screen
+  function updateTitleHighScore() {
+    const el = document.getElementById('title-highscore');
+    if (el && game.highScore > 0) {
+      el.textContent = 'BEST: ' + game.highScore;
+    }
+  }
+  updateTitleHighScore();
 
   gameLoop();
 
