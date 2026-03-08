@@ -70,7 +70,8 @@
       maxHealth: 100,
       animState: 'run',
       invincible: 0,
-      scratching: 0
+      scratching: 0,
+      doubleJumped: false
     },
 
     // Scene
@@ -100,6 +101,10 @@
 
     // Complaint captain
     complaintShown: false,
+
+    // Screen shake
+    shakeTimer: 0,
+    shakeIntensity: 0,
 
     // Score popups
     popups: [],
@@ -134,7 +139,11 @@
     game.player.health = 60;
     game.player.invincible = 0;
     game.player.scratching = 0;
+    game.player.doubleJumped = false;
     game.player.animState = 'run';
+
+    game.shakeTimer = 0;
+    game.shakeIntensity = 0;
 
     game.entities = [];
     game.effects = [];
@@ -315,6 +324,12 @@
     }
   }
 
+  // ---- Screen Shake ----
+  function triggerShake(intensity, duration) {
+    game.shakeIntensity = intensity || 6;
+    game.shakeTimer = duration || 15;
+  }
+
   // ---- Score Popup ----
   function addPopup(x, y, text, className) {
     const popup = document.createElement('div');
@@ -448,6 +463,7 @@
     if (game.player.grounded) {
       game.player.vy = -9.5;
       game.player.grounded = false;
+      game.player.doubleJumped = false;
       game.player.animState = 'jump';
       emitParticles(game.player.x + game.player.w/2, game.player.y + game.player.h, '#d1d5db', 5);
 
@@ -456,6 +472,13 @@
         game.score += 5;
         addPopup(game.player.x, game.player.y - 10, '+5', 'birds');
       }
+    } else if (!game.player.doubleJumped) {
+      // Double jump! Cats always land on their feet
+      game.player.vy = -8;
+      game.player.doubleJumped = true;
+      game.player.animState = 'jump';
+      emitParticles(game.player.x + game.player.w/2, game.player.y + game.player.h, '#e5e7eb', 4);
+      emitParticles(game.player.x + game.player.w/2, game.player.y + game.player.h, '#f9a8d4', 3);
     } else {
       jumpBuffered = true;
     }

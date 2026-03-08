@@ -300,8 +300,16 @@ h1 {
 #complaint-text {
   color: rgba(255,255,255,0.7);
   font-size: 14px;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   line-height: 1.5;
+}
+
+#complaint-score {
+  color: #fbbf24;
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
 }
 
 #continue-btn {
