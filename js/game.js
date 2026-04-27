@@ -330,6 +330,14 @@
     game.shakeTimer = duration || 15;
   }
 
+  // ---- Haptic Feedback (mobile vibration) ----
+  function triggerHaptic(pattern) {
+    if (!navigator.vibrate) return;
+    try {
+      navigator.vibrate(pattern);
+    } catch(e) { /* vibration not allowed */ }
+  }
+
   // ---- Score Popup ----
   function addPopup(x, y, text, className) {
     const popup = document.createElement('div');
@@ -384,6 +392,7 @@
   function triggerComplaint() {
     game.state = STATE.COMPLAINT;
     game.complaintShown = true;
+    triggerHaptic([200, 50, 200, 50, 300]);
 
     // Update complaint text and score display
     const isNewHigh = game.score > 0 && game.score >= game.highScore;
@@ -466,6 +475,7 @@
       game.player.doubleJumped = false;
       game.player.animState = 'jump';
       emitParticles(game.player.x + game.player.w/2, game.player.y + game.player.h, '#d1d5db', 5);
+      triggerHaptic(10);
 
       // Outdoor jump bonus
       if (game.scene === 'outdoor') {
@@ -479,6 +489,7 @@
       game.player.animState = 'jump';
       emitParticles(game.player.x + game.player.w/2, game.player.y + game.player.h, '#e5e7eb', 4);
       emitParticles(game.player.x + game.player.w/2, game.player.y + game.player.h, '#f9a8d4', 3);
+      triggerHaptic([20, 10, 30]);
     } else {
       jumpBuffered = true;
     }
@@ -667,6 +678,7 @@
           emitParticles(ent.x + ent.w/2, ent.y + ent.h/2, '#fbbf24', 8);
           game.effects.push({ type: 'scratch', x: ent.x + ent.w/2, y: ent.y + ent.h/2, frame: 0 });
           triggerShake(8, 20);
+          triggerHaptic([50, 20, 100]);
 
           if (p.health <= 0) {
             p.health = 0;
